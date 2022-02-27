@@ -1,5 +1,4 @@
 import { MikroORM } from '@mikro-orm/core'
-import { __prod__ } from './constants'
 import express from 'express';
 import microOrmConfig from './mikro-orm.config'
 import { ApolloServer } from 'apollo-server-express';
