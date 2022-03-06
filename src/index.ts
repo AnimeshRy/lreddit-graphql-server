@@ -21,8 +21,12 @@ const main = async () => {
     const app = express();
     const RedisStore = connectRedis(session)
     const redis = new Redis('redis://127.0.0.1:6379');
+
     app.set("trust proxy", 1);
+
+    // Apply Cors to All Routes
     app.use(cors({
+        origin: 'http://localhost:3000',
         credentials: true
     }))
 
