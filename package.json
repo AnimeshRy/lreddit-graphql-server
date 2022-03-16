@@ -18,6 +18,7 @@
     "@types/connect-redis": "^0.0.14",
     "@types/express-session": "^1.17.0",
     "@types/node": "^17.0.15",
+    "@types/nodemailer": "^6.4.4",
     "@types/redis": "^4.0.11",
     "nodemon": "^2.0.15",
     "ts-node": "^10.4.0",
@@ -36,6 +37,7 @@
     "express-session": "^1.17.1",
     "graphql": "^15.3.0",
     "ioredis": "^4.28.5",
+    "nodemailer": "^6.7.2",
     "type-graphql": "^1.0.0-rc.3"
   },
   "mikro-orm": {
