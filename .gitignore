@@ -15,3 +15,4 @@ database
 .DS_Store
 COVERAGE_RESULT
 .npmrc
+.env
