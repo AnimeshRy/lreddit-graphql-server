@@ -1,6 +1,6 @@
-import { Collection, Entity, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
-import { Field, ObjectType } from 'type-graphql';
-import { Post } from './Post';
+import { Collection, Entity, OneToMany, PrimaryKey, Property } from "@mikro-orm/core";
+import { Field, ObjectType } from "type-graphql";
+import { Post } from "./Post";
 
 @ObjectType() // converting existing class to graphql schema
 @Entity()
@@ -17,11 +17,11 @@ export class User {
     @Property({ type: "text", unique: true })
     email!: string;
 
-    @Property({ type: 'text' })
+    @Property({ type: "text" })
     password!: string;
 
-    @OneToMany({ entity: () => Post, mappedBy: 'creator' })
-    posts = new Collection<Post>(this)
+    @OneToMany({ entity: () => Post, mappedBy: "creator" })
+    posts = new Collection<Post>(this);
 
     @Field(() => String)
     @Property({ type: "date" })

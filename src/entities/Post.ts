@@ -1,6 +1,6 @@
-import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
-import { Field, Int, ObjectType } from 'type-graphql';
-import { User } from './User';
+import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import { Field, Int, ObjectType } from "type-graphql";
+import { User } from "./User";
 
 @ObjectType() // converting existing class to graphql schema
 @Entity()
