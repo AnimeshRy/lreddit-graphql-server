@@ -16,3 +16,4 @@ database
 COVERAGE_RESULT
 .npmrc
 .env
+.yarn
