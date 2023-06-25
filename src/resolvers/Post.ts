@@ -1,7 +1,15 @@
 import { Post } from '../entities/Post';
-import { Query, Resolver, Ctx, Arg, Mutation } from 'type-graphql';
+import { Query, Resolver, Ctx, Arg, Mutation, Field, InputType } from 'type-graphql';
 import { MyContext } from 'src/types';
 import { RequiredEntityData } from '@mikro-orm/core';
+
+@InputType()
+class PostInput {
+  @Field()
+  title: string;
+  @Field()
+  text: string;
+}
 
 @Resolver()
 export class PostResolver {
@@ -16,19 +24,20 @@ export class PostResolver {
   }
 
   @Mutation(() => Post)
-  async createPost(@Arg('title', () => String) title: string, @Ctx() { em }: MyContext): Promise<Post> {
-    const post = em.create(Post, { title } as RequiredEntityData<Post>);
+  async createPost(@Arg('input') input: PostInput, @Ctx() { req, em }: MyContext): Promise<Post> {
+    const post = em.create(Post, { ...input, creator: req.session.userId } as RequiredEntityData<Post>);
     await em.persistAndFlush(post);
     return post;
   }
 
   @Mutation(() => Post, { nullable: true })
-  async updatePost(@Arg('id') id: number, @Arg('title', () => String, { nullable: true }) title: string, @Ctx() { em }: MyContext): Promise<Post | null> {
+  async updatePost(@Arg('id') id: number, @Arg('title') title: string, @Arg('text') text: string, @Ctx() { em }: MyContext): Promise<Post | null> {
     const post = await em.findOne(Post, { id });
     if (!post) {
       return null;
     }
     if (typeof title !== 'undefined') {
+      post.text = text;
       post.title = title;
       await em.persistAndFlush(post);
     }

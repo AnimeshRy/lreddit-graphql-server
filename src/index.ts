@@ -31,7 +31,7 @@ const main = async () => {
   // Apply Cors to All Routes
   app.use(
     cors({
-      origin: '*',
+      origin: 'https://studio.apollographql.com',
       credentials: true,
     }),
   );
@@ -41,10 +41,10 @@ const main = async () => {
       name: COOKIE_NAME,
       store: redisStore,
       cookie: {
-        maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
+        maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days in ms
         httpOnly: true,
-        sameSite: 'lax', //csrf
-        secure: __prod__, // cookie only works in https
+        sameSite: __prod__ ? 'lax' : 'none', //csrf
+        secure: true, // cookie only works in https
       },
       saveUninitialized: false,
       secret: 'asdasdasdasdasdasdasd',
@@ -55,6 +55,9 @@ const main = async () => {
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
       resolvers: [HelloResolver, PostResolver, UserResolver],
+      //   authChecker: ({ context: { req } }) => {
+      //     return !!req.session.userId;
+      //   },
       validate: false, // turn off class validation
     }),
     context: ({ req, res }): MyContext => ({ em: orm.em, req, res, redis }),

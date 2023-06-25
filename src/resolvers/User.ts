@@ -1,13 +1,14 @@
 import { User } from '../entities/User';
 import { MyContext } from 'src/types';
 import { RequiredEntityData } from '@mikro-orm/core';
-import { Resolver, Mutation, Arg, Field, Ctx, ObjectType, Query } from 'type-graphql';
+import { Resolver, Mutation, Arg, Field, Ctx, ObjectType, Query, UseMiddleware } from 'type-graphql';
 import argon2 from 'argon2';
 import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from '../constants';
 import { UsernamePasswordInput } from './UsernamePasswordInput';
 import { validateRegister } from '../utils/validateRegister';
 import { sendEmail } from '../utils/sendEmail';
 import { v4 } from 'uuid';
+import { isAuth } from '../middlewares/isAuth';
 
 @ObjectType()
 class FieldError {
@@ -94,12 +95,10 @@ export class UserResolver {
     return true;
   }
 
+  //   @Authorized()
+  @UseMiddleware(isAuth)
   @Query(() => User, { nullable: true })
   async me(@Ctx() { req, em }: MyContext) {
-    if (!req.session.userId) {
-      return null;
-    }
-
     const user = await em.findOne(User, { id: req.session.userId });
     return user;
   }
