@@ -1,32 +1,14 @@
 import { User } from '../entities/User';
 import { MyContext } from 'src/types';
 import { RequiredEntityData } from '@mikro-orm/core';
-import { Resolver, Mutation, Arg, Field, Ctx, ObjectType, Query, UseMiddleware } from 'type-graphql';
+import { Resolver, Mutation, Arg, Ctx, Query, UseMiddleware } from 'type-graphql';
 import argon2 from 'argon2';
 import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from '../constants';
-import { UsernamePasswordInput } from './UsernamePasswordInput';
+import { UserResponse, UsernamePasswordInput } from './inputTypes';
 import { validateRegister } from '../utils/validateRegister';
 import { sendEmail } from '../utils/sendEmail';
 import { v4 } from 'uuid';
 import { isAuth } from '../middlewares/isAuth';
-
-@ObjectType()
-class FieldError {
-  @Field()
-  field: string;
-
-  @Field()
-  message: string;
-}
-
-@ObjectType()
-class UserResponse {
-  @Field(() => [FieldError], { nullable: true })
-  errors?: FieldError[]; // optional type, returned when user not found
-
-  @Field(() => User, { nullable: true })
-  user?: User; // optional type, returned when user is found
-}
 
 @Resolver()
 export class UserResolver {
@@ -55,7 +37,7 @@ export class UserResolver {
       };
     }
 
-    const user = await em.findOne(User, { id: parseInt(userId) });
+    const user = await em.findOne(User, { id: userId });
 
     if (!user) {
       return {

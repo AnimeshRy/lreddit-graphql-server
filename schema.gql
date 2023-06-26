@@ -10,18 +10,19 @@ type FieldError {
 
 type Mutation {
   changePassword(newPassword: String!, token: String!): UserResponse!
-  createPost(input: PostInput!): Post!
-  deletePost(id: Float!): Boolean!
+  createPost(input: PostInput!): PostResponse!
+  createSubReddit(input: SubRedditCreateInput!): SubReddit!
+  deletePost(id: String!): Boolean!
   forgotPassword(email: String!): Boolean!
   login(password: String!, usernameOrEmail: String!): UserResponse!
   logout: Boolean!
   register(options: UsernamePasswordInput!): UserResponse!
-  updatePost(id: Float!, text: String!, title: String!): Post
+  updatePost(id: String!, title: SubRedditUpdateInput!): SubReddit
 }
 
 type Post {
   createdAt: String!
-  id: Int!
+  id: String!
   points: Float!
   text: String!
   title: String!
@@ -29,21 +30,48 @@ type Post {
 }
 
 input PostInput {
+  subReddit: String!
   text: String!
   title: String!
+}
+
+type PostResponse {
+  errors: [FieldError!]
+  post: Post
 }
 
 type Query {
   hello: String!
   me: User
-  post(id: Float!): Post
+  post(id: String!): Post
   posts: [Post!]!
+  subreddit(id: String!): SubReddit
+  subreddits: [Post!]!
+}
+
+type SubReddit {
+  createdAt: String!
+  id: String!
+
+  """SubReddit name MaxLength > 30"""
+  name: String!
+  text: String!
+  updatedAt: String!
+}
+
+input SubRedditCreateInput {
+  name: String!
+  text: String!
+}
+
+input SubRedditUpdateInput {
+  text: String!
 }
 
 type User {
   createdAt: String!
   email: String!
-  id: Float!
+  id: String!
   updatedAt: String!
   username: String!
 }

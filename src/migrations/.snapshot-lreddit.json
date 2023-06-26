@@ -1,17 +1,19 @@
 {
-  "namespaces": ["public"],
+  "namespaces": [
+    "public"
+  ],
   "name": "public",
   "tables": [
     {
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
-          "unsigned": true,
-          "autoincrement": true,
-          "primary": true,
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
           "nullable": false,
-          "mappedType": "integer"
+          "mappedType": "string"
         },
         "username": {
           "name": "username",
@@ -65,14 +67,18 @@
       "schema": "public",
       "indexes": [
         {
-          "columnNames": ["username"],
+          "columnNames": [
+            "username"
+          ],
           "composite": false,
           "keyName": "user_username_unique",
           "primary": false,
           "unique": true
         },
         {
-          "columnNames": ["email"],
+          "columnNames": [
+            "email"
+          ],
           "composite": false,
           "keyName": "user_email_unique",
           "primary": false,
@@ -80,7 +86,9 @@
         },
         {
           "keyName": "user_pkey",
-          "columnNames": ["id"],
+          "columnNames": [
+            "id"
+          ],
           "composite": false,
           "primary": true,
           "unique": true
@@ -93,12 +101,110 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
-          "unsigned": true,
-          "autoincrement": true,
-          "primary": true,
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
           "nullable": false,
-          "mappedType": "integer"
+          "mappedType": "string"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 30,
+          "mappedType": "text"
+        },
+        "text": {
+          "name": "text",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "creator_id": {
+          "name": "creator_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        }
+      },
+      "name": "sub_reddit",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "name"
+          ],
+          "composite": false,
+          "keyName": "sub_reddit_name_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "sub_reddit_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "sub_reddit_creator_id_foreign": {
+          "constraintName": "sub_reddit_creator_id_foreign",
+          "columnNames": [
+            "creator_id"
+          ],
+          "localTableName": "public.sub_reddit",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.user",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
         },
         "title": {
           "name": "title",
@@ -120,12 +226,21 @@
         },
         "creator_id": {
           "name": "creator_id",
-          "type": "int",
+          "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "integer"
+          "mappedType": "string"
+        },
+        "sub_reddit_id": {
+          "name": "sub_reddit_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
         },
         "points": {
           "name": "points",
@@ -163,7 +278,9 @@
       "indexes": [
         {
           "keyName": "post_pkey",
-          "columnNames": ["id"],
+          "columnNames": [
+            "id"
+          ],
           "composite": false,
           "primary": true,
           "unique": true
@@ -173,10 +290,26 @@
       "foreignKeys": {
         "post_creator_id_foreign": {
           "constraintName": "post_creator_id_foreign",
-          "columnNames": ["creator_id"],
+          "columnNames": [
+            "creator_id"
+          ],
           "localTableName": "public.post",
-          "referencedColumnNames": ["id"],
+          "referencedColumnNames": [
+            "id"
+          ],
           "referencedTableName": "public.user",
+          "updateRule": "cascade"
+        },
+        "post_sub_reddit_id_foreign": {
+          "constraintName": "post_sub_reddit_id_foreign",
+          "columnNames": [
+            "sub_reddit_id"
+          ],
+          "localTableName": "public.post",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.sub_reddit",
           "updateRule": "cascade"
         }
       }

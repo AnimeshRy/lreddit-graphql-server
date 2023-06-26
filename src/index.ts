@@ -6,6 +6,8 @@ import { buildSchema } from 'type-graphql';
 import { HelloResolver } from './resolvers/hello';
 import { PostResolver } from './resolvers/Post';
 import { UserResolver } from './resolvers/User';
+import { SubRedditResolver } from './resolvers/SubReddit';
+
 import Redis from 'ioredis';
 import session from 'express-session';
 import { COOKIE_NAME, __prod__ } from './constants';
@@ -54,11 +56,12 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver, PostResolver, UserResolver],
+      resolvers: [HelloResolver, PostResolver, UserResolver, SubRedditResolver],
       //   authChecker: ({ context: { req } }) => {
       //     return !!req.session.userId;
       //   },
-      validate: false, // turn off class validation
+      validate: true, // turn off class validation
+      emitSchemaFile: true,
     }),
     context: ({ req, res }): MyContext => ({ em: orm.em, req, res, redis }),
   });

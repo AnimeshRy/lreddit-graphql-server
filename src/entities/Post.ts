@@ -1,13 +1,14 @@
 import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
-import { Field, Int, ObjectType } from 'type-graphql';
+import { Field, ObjectType } from 'type-graphql';
 import { User } from './User';
-
+import { v4 } from 'uuid';
+import { SubReddit } from './SubReddit';
 @ObjectType() // converting existing class to graphql schema
 @Entity()
 export class Post {
-  @Field(() => Int)
+  @Field(() => String)
   @PrimaryKey()
-  id!: number;
+  id: string = v4();
 
   @Field()
   @Property({ type: 'text' })
@@ -18,7 +19,10 @@ export class Post {
   text!: string;
 
   @ManyToOne({ entity: () => User })
-  creator: User;
+  creator!: User;
+
+  @ManyToOne({ entity: () => SubReddit })
+  subReddit!: SubReddit;
 
   @Field()
   @Property({ type: 'int', default: 0 })

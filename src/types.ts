@@ -4,7 +4,7 @@ import { Redis } from 'ioredis';
 import { Session, SessionData } from 'express-session';
 
 interface MySessionData extends SessionData {
-  userId?: number;
+  userId?: string;
 }
 
 export type MyContext = {

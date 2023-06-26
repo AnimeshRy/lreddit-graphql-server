@@ -1,16 +1,9 @@
 import { Post } from '../entities/Post';
-import { Query, Resolver, Ctx, Arg, Mutation, Field, InputType } from 'type-graphql';
+import { Query, Resolver, Ctx, Arg, Mutation } from 'type-graphql';
 import { MyContext } from 'src/types';
+import { SubReddit } from '../entities/SubReddit';
 import { RequiredEntityData } from '@mikro-orm/core';
-
-@InputType()
-class PostInput {
-  @Field()
-  title: string;
-  @Field()
-  text: string;
-}
-
+import { PostInput, PostResponse } from './inputTypes';
 @Resolver()
 export class PostResolver {
   @Query(() => [Post])
@@ -19,33 +12,45 @@ export class PostResolver {
   }
 
   @Query(() => Post, { nullable: true })
-  post(@Arg('id') id: number, @Ctx() { em }: MyContext): Promise<Post | null> {
+  post(@Arg('id') id: string, @Ctx() { em }: MyContext): Promise<Post | null> {
     return em.findOne(Post, { id });
   }
 
-  @Mutation(() => Post)
-  async createPost(@Arg('input') input: PostInput, @Ctx() { req, em }: MyContext): Promise<Post> {
-    const post = em.create(Post, { ...input, creator: req.session.userId } as RequiredEntityData<Post>);
+  @Mutation(() => PostResponse)
+  async createPost(@Arg('input') input: PostInput, @Ctx() { req, em }: MyContext): Promise<PostResponse> {
+    const reqSubReddit = await em.findOne(SubReddit, { id: input.subReddit });
+    if (!reqSubReddit) {
+      return {
+        errors: [
+          {
+            field: 'subReddit',
+            message: 'Attached SubReddit does not exist',
+          },
+        ],
+      };
+    }
+
+    const post = em.create(Post, { ...input, creator: req.session.userId, subReddit: reqSubReddit.id } as RequiredEntityData<Post>);
     await em.persistAndFlush(post);
-    return post;
+    return {
+      post,
+    };
   }
 
   @Mutation(() => Post, { nullable: true })
-  async updatePost(@Arg('id') id: number, @Arg('title') title: string, @Arg('text') text: string, @Ctx() { em }: MyContext): Promise<Post | null> {
+  async updatePost(@Arg('id') id: string, @Arg('title') updateInput: PostInput, @Ctx() { em }: MyContext): Promise<Post | null> {
     const post = await em.findOne(Post, { id });
     if (!post) {
       return null;
     }
-    if (typeof title !== 'undefined') {
-      post.text = text;
-      post.title = title;
-      await em.persistAndFlush(post);
-    }
+    post.text = updateInput.text ?? post.text;
+    post.title = updateInput.title ?? post.title;
+    await em.persistAndFlush(post);
     return post;
   }
 
   @Mutation(() => Boolean)
-  async deletePost(@Arg('id') id: number, @Ctx() { em }: MyContext): Promise<boolean> {
+  async deletePost(@Arg('id') id: string, @Ctx() { em }: MyContext): Promise<boolean> {
     await em.nativeDelete(Post, { id });
     return true;
   }
