@@ -2,6 +2,7 @@ import { User } from '../entities/User';
 import { InputType, Field, ObjectType } from 'type-graphql';
 import { MaxLength } from 'class-validator';
 import { Post } from '../entities/Post';
+import { SubReddit } from '../entities/SubReddit';
 
 @ObjectType()
 export class FieldError {
@@ -29,6 +30,9 @@ export class UserResponse {
 
   @Field(() => User, { nullable: true })
   user?: User; // optional type, returned when user is found
+
+  @Field(() => Boolean, { nullable: true })
+  success?: boolean; // optional type, returned when user is found
 }
 
 @ObjectType()
@@ -38,6 +42,21 @@ export class PostResponse {
 
   @Field(() => Post, { nullable: true })
   post?: Post; // optional type, returned when user is found
+
+  @Field(() => Boolean, { nullable: true })
+  success?: boolean; // optional type, returned when user is found
+}
+
+@ObjectType()
+export class SubRedditResponse {
+  @Field(() => [FieldError], { nullable: true })
+  errors?: FieldError[]; // optional type, returned when user not found
+
+  @Field(() => SubReddit, { nullable: true })
+  subReddit?: SubReddit; // optional type, returned when user is found
+
+  @Field(() => Boolean, { nullable: true })
+  success?: boolean; // optional type, returned when user is found
 }
 
 @InputType()

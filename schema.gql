@@ -11,13 +11,15 @@ type FieldError {
 type Mutation {
   changePassword(newPassword: String!, token: String!): UserResponse!
   createPost(input: PostInput!): PostResponse!
-  createSubReddit(input: SubRedditCreateInput!): SubReddit!
-  deletePost(id: String!): Boolean!
+  createSubReddit(input: SubRedditCreateInput!): SubRedditResponse!
+  deletePost(id: String!): PostResponse
+  deleteSubReddit(id: String!): SubRedditResponse!
   forgotPassword(email: String!): Boolean!
   login(password: String!, usernameOrEmail: String!): UserResponse!
   logout: Boolean!
   register(options: UsernamePasswordInput!): UserResponse!
-  updatePost(id: String!, title: SubRedditUpdateInput!): SubReddit
+  updatePost(id: String!, title: PostInput!): PostResponse
+  updateSubReddit(id: String!, title: SubRedditUpdateInput!): SubRedditResponse
 }
 
 type Post {
@@ -38,6 +40,7 @@ input PostInput {
 type PostResponse {
   errors: [FieldError!]
   post: Post
+  success: Boolean
 }
 
 type Query {
@@ -46,15 +49,17 @@ type Query {
   post(id: String!): Post
   posts: [Post!]!
   subreddit(id: String!): SubReddit
-  subreddits: [Post!]!
+  subreddits: [SubReddit!]!
 }
 
 type SubReddit {
   createdAt: String!
+  creator: User!
   id: String!
 
   """SubReddit name MaxLength > 30"""
   name: String!
+  posts: [Post!]
   text: String!
   updatedAt: String!
 }
@@ -62,6 +67,12 @@ type SubReddit {
 input SubRedditCreateInput {
   name: String!
   text: String!
+}
+
+type SubRedditResponse {
+  errors: [FieldError!]
+  subReddit: SubReddit
+  success: Boolean
 }
 
 input SubRedditUpdateInput {
@@ -78,6 +89,7 @@ type User {
 
 type UserResponse {
   errors: [FieldError!]
+  success: Boolean
   user: User
 }
 

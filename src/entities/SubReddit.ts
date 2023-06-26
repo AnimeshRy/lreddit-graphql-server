@@ -19,9 +19,11 @@ export class SubReddit {
   @Property({ type: 'text' })
   text!: string;
 
+  @Field(() => User)
   @ManyToOne({ entity: () => User })
   creator: User;
 
+  @Field(() => [Post], { nullable: true })
   @OneToMany({ entity: () => Post, mappedBy: 'subReddit', cascade: [Cascade.REMOVE] })
   posts = new Collection<Post>(this);
 
