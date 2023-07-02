@@ -1,5 +1,6 @@
 import { __prod__ } from './constants';
 import { Post } from './entities/Post';
+import { SubReddit } from './entities/SubReddit';
 import { Options } from '@mikro-orm/core';
 import path from 'path';
 import { User } from './entities/User';
@@ -10,7 +11,7 @@ const config: Options<PostgreSqlDriver> = {
     path: path.join(__dirname, './migrations'),
     glob: '!(*.d).{js,ts}', // all js and ts files but no .d files
   },
-  entities: [Post, User],
+  entities: [Post, User, SubReddit],
   dbName: 'lreddit',
   user: 'animesh',
   password: 'postgres',
