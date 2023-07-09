@@ -197,6 +197,89 @@
     },
     {
       "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "sub_reddit_id": {
+          "name": "sub_reddit_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        }
+      },
+      "name": "sub_scription",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "sub_scription_pkey",
+          "columnNames": [
+            "user_id",
+            "sub_reddit_id"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "sub_scription_user_id_foreign": {
+          "constraintName": "sub_scription_user_id_foreign",
+          "columnNames": [
+            "user_id"
+          ],
+          "localTableName": "public.sub_scription",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.user",
+          "updateRule": "cascade"
+        },
+        "sub_scription_sub_reddit_id_foreign": {
+          "constraintName": "sub_scription_sub_reddit_id_foreign",
+          "columnNames": [
+            "sub_reddit_id"
+          ],
+          "localTableName": "public.sub_scription",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.sub_reddit",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
         "id": {
           "name": "id",
           "type": "varchar(255)",

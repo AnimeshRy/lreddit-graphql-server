@@ -18,6 +18,8 @@ type Mutation {
   login(password: String!, usernameOrEmail: String!): UserResponse!
   logout: Boolean!
   register(options: UsernamePasswordInput!): UserResponse!
+  subscribeSubReddit(id: String!): SubRedditResponse!
+  unsubscribeSubReddit(id: String!): SubRedditResponse!
   updatePost(id: String!, title: PostInput!): PostResponse
   updateSubReddit(id: String!, title: SubRedditUpdateInput!): SubRedditResponse
 }
@@ -60,6 +62,7 @@ type SubReddit {
   """SubReddit name MaxLength > 30"""
   name: String!
   posts: [Post!]
+  subscribers: [SubScription!]
   text: String!
   updatedAt: String!
 }
@@ -79,10 +82,19 @@ input SubRedditUpdateInput {
   text: String!
 }
 
+type SubScription {
+  createdAt: String!
+  subReddit: String!
+  updatedAt: String!
+  user: String!
+}
+
 type User {
   createdAt: String!
+  createdSubreddits: [SubReddit!]
   email: String!
   id: String!
+  subscriptions: [SubScription!]
   updatedAt: String!
   username: String!
 }

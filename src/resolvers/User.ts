@@ -81,7 +81,7 @@ export class UserResolver {
   @UseMiddleware(isAuth)
   @Query(() => User, { nullable: true })
   async me(@Ctx() { req, em }: MyContext) {
-    const user = await em.findOne(User, { id: req.session.userId });
+    const user = await em.findOne(User, { id: req.session.userId }, { populate: ['createdSubreddits', 'subscriptions'] });
     return user;
   }
 

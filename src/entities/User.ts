@@ -3,6 +3,7 @@ import { Field, ObjectType } from 'type-graphql';
 import { Post } from './Post';
 import { SubReddit } from './SubReddit';
 import { v4 } from 'uuid';
+import { SubScription } from './Subscription';
 
 @ObjectType() // converting existing class to graphql schema
 @Entity()
@@ -25,8 +26,13 @@ export class User {
   @OneToMany({ entity: () => Post, mappedBy: 'creator' })
   posts = new Collection<Post>(this);
 
+  @Field(() => [SubReddit], { nullable: true })
   @OneToMany({ entity: () => SubReddit, mappedBy: 'creator' })
   createdSubreddits = new Collection<SubReddit>(this);
+
+  @Field(() => [SubScription], { nullable: true })
+  @OneToMany({ entity: () => SubScription, mappedBy: 'user' })
+  subscriptions = new Collection<SubScription>(this);
 
   @Field(() => String)
   @Property({ type: 'date' })

@@ -3,6 +3,7 @@ import { Field, ObjectType } from 'type-graphql';
 import { Post } from './Post';
 import { User } from './User';
 import { v4 } from 'uuid';
+import { SubScription } from './Subscription';
 
 @ObjectType()
 @Entity()
@@ -26,6 +27,10 @@ export class SubReddit {
   @Field(() => [Post], { nullable: true })
   @OneToMany({ entity: () => Post, mappedBy: 'subReddit', cascade: [Cascade.REMOVE] })
   posts = new Collection<Post>(this);
+
+  @Field(() => [SubScription], { nullable: true })
+  @OneToMany({ entity: () => SubScription, mappedBy: 'subReddit', cascade: [Cascade.REMOVE] })
+  subscribers = new Collection<SubScription>(this);
 
   @Field(() => String)
   @Property({ type: 'date' })
