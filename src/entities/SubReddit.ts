@@ -1,9 +1,8 @@
-import { Entity, ManyToOne, PrimaryKey, Property, OneToMany, Collection, Cascade } from '@mikro-orm/core';
+import { Entity, ManyToOne, PrimaryKey, Property, OneToMany, Collection, Cascade, ManyToMany } from '@mikro-orm/core';
 import { Field, ObjectType } from 'type-graphql';
 import { Post } from './Post';
 import { User } from './User';
 import { v4 } from 'uuid';
-import { SubScription } from './Subscription';
 
 @ObjectType()
 @Entity()
@@ -28,9 +27,9 @@ export class SubReddit {
   @OneToMany({ entity: () => Post, mappedBy: 'subReddit', cascade: [Cascade.REMOVE] })
   posts = new Collection<Post>(this);
 
-  @Field(() => [SubScription], { nullable: true })
-  @OneToMany({ entity: () => SubScription, mappedBy: 'subReddit', cascade: [Cascade.REMOVE] })
-  subscribers = new Collection<SubScription>(this);
+  @Field(() => [User], { nullable: true })
+  @ManyToMany(() => User, user => user.subscriptions)
+  subscribers = new Collection<User>(this);
 
   @Field(() => String)
   @Property({ type: 'date' })

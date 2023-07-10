@@ -4,7 +4,7 @@ import { RequiredEntityData } from '@mikro-orm/core';
 import { SubRedditCreateInput, SubRedditResponse, SubRedditUpdateInput } from './inputTypes';
 import { SubReddit } from '../entities/SubReddit';
 import { isAuth } from '../middlewares/isAuth';
-import { SubScription } from '../entities/Subscription';
+import { User } from 'src/entities/User';
 
 @Resolver()
 export class SubRedditResolver {
@@ -108,8 +108,8 @@ export class SubRedditResolver {
         ],
       };
     }
-    const existingSubScription = await em.findOne(SubScription, { user: req.session.userId, subReddit: id });
-    if (existingSubScription) {
+    const existingSubScription = await em.findOne(User, { id: req.session.userId }, { populate: ['subscriptions'], refresh: true });
+    if (existingSubScription?.subscriptions.contains(subReddit)) {
       return {
         success: false,
         subReddit: subReddit,
@@ -121,11 +121,8 @@ export class SubRedditResolver {
         ],
       };
     }
-    const subScription = await em.create(SubScription, {
-      user: req.session.userId,
-      subReddit: id,
-    } as RequiredEntityData<SubScription>);
-    await em.persistAndFlush(subScription);
+    existingSubScription !== null && existingSubScription?.subscriptions.add(subReddit);
+    await em.persistAndFlush(existingSubScription);
     return {
       success: true,
       subReddit: subReddit,

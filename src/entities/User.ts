@@ -1,9 +1,8 @@
-import { Collection, Entity, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
+import { Cascade, Collection, Entity, ManyToMany, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
 import { Field, ObjectType } from 'type-graphql';
 import { Post } from './Post';
 import { SubReddit } from './SubReddit';
 import { v4 } from 'uuid';
-import { SubScription } from './Subscription';
 
 @ObjectType() // converting existing class to graphql schema
 @Entity()
@@ -30,9 +29,9 @@ export class User {
   @OneToMany({ entity: () => SubReddit, mappedBy: 'creator' })
   createdSubreddits = new Collection<SubReddit>(this);
 
-  @Field(() => [SubScription], { nullable: true })
-  @OneToMany({ entity: () => SubScription, mappedBy: 'user' })
-  subscriptions = new Collection<SubScription>(this);
+  @Field(() => [SubReddit], { nullable: true })
+  @ManyToMany(() => SubReddit, subReddit => subReddit.subscribers, { owner: true, cascade: [Cascade.REMOVE] })
+  subscriptions = new Collection<SubReddit>(this);
 
   @Field(() => String)
   @Property({ type: 'date' })

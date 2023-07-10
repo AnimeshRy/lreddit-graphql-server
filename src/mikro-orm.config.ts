@@ -4,7 +4,6 @@ import { SubReddit } from './entities/SubReddit';
 import { Options } from '@mikro-orm/core';
 import path from 'path';
 import { User } from './entities/User';
-import { SubScription } from './entities/Subscription';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 
 const config: Options<PostgreSqlDriver> = {
@@ -12,7 +11,7 @@ const config: Options<PostgreSqlDriver> = {
     path: path.join(__dirname, './migrations'),
     glob: '!(*.d).{js,ts}', // all js and ts files but no .d files
   },
-  entities: [Post, User, SubReddit, SubScription],
+  entities: [Post, User, SubReddit],
   dbName: 'lreddit',
   user: 'animesh',
   password: 'postgres',
